@@ -7,6 +7,8 @@ def main():
 
     analyzer = mf.ExcelAnalyzer()
 
+    st.sidebar.image("assets/ojk-logo-jpg.jpg")
+
     st.sidebar.header("📥 Upload & Pilih Parameter")
 
     uploaded_files = st.sidebar.file_uploader(
