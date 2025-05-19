@@ -2,12 +2,20 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
     software-properties-common \
     git \
     && rm -rf /var/lib/apt/lists/*
+
+# Set environment variable agar Streamlit tidak tulis ke /.streamlit
+ENV STREAMLIT_HOME=/app/.streamlit \
+    MPLCONFIGDIR=/app/.config/matplotlib
+
+# Buat folder config agar tidak error saat runtime
+RUN mkdir -p $STREAMLIT_HOME $MPLCONFIGDIR
 
 COPY requirements.txt ./
 COPY src/ ./src/
