@@ -1,3 +1,6 @@
+import os
+os.environ["HOME"] = "/tmp" 
+
 import streamlit as st
 import utils.myFunc as mf
 
