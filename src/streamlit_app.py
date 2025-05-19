@@ -1,7 +1,3 @@
-import os
-os.environ['HOME'] = '/root'
-os.environ['STREAMLIT_CONFIG_DIR'] = '/root/.streamlit'
-
 import streamlit as st
 import utils.myFunc as mf
 
