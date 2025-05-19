@@ -17,4 +17,4 @@ jobs:
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_SECRET }}
-        run: git push https://naufalnashif:$HF_TOKEN@huggingface.co/spaces/naufalnashif/rfojk-streamlit-ai-eval main
+        run: git push --force https://naufalnashif:$HF_TOKEN@huggingface.co/spaces/naufalnashif/rfojk-streamlit-ai-eval main
