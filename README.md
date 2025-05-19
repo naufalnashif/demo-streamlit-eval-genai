@@ -1,3 +1,24 @@
+---
+title: RF OJK Streamlit AI Eval
+emoji: 🚀
+colorFrom: red
+colorTo: red
+sdk: docker
+app_port: 8501
+tags:
+  - streamlit
+pinned: false
+short_description: Streamlit template space
+license: mit
+---
+
+# Rfojk Streamlit AI Eval
+
+A Streamlit app for evaluating AI model predictions in real-time.
+
+Check it out on Hugging Face Spaces!
+
+
 # 📊 AI Model Evaluation
 
 A simple yet powerful Streamlit web app for analyzing and evaluating verification data from Excel files. Designed to help you upload, visualize, and assess classification metrics like accuracy, precision, recall, and F1 score — all in one place.
