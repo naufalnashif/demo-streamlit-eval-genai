@@ -1,9 +1,8 @@
 name: Sync to Hugging Face hub
+
 on:
   push:
     branches: [master]
-
-  # to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
@@ -14,7 +13,15 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
-      - name: Push to hub
+
+      - name: Set Git identity
+        run: |
+          git config --global user.email "naufalnashif.imanuddin@gmail.com"
+          git config --global user.name "naufalnashif"
+
+      - name: Add Hugging Face remote and push
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push --force https://naufalnashif:$HF_TOKEN@huggingface.co/spaces/naufalnashif/rfojk-streamlit-ai-eval main
+        run: |
+          git remote add hf https://naufalnashif:$HF_TOKEN@huggingface.co/spaces/naufalnashif/rfojk-streamlit-ai-eval
+          git push --force hf master:main
