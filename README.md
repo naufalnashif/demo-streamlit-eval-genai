@@ -4,6 +4,7 @@ emoji: 🚀
 colorFrom: red
 colorTo: red
 sdk: docker
+app_file: src/streamlit_app.py
 app_port: 8501
 tags:
   - streamlit
