@@ -10,17 +10,24 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Set environment variable agar Streamlit tidak tulis ke /.streamlit
-ENV STREAMLIT_HOME=/app/.streamlit \
-    MPLCONFIGDIR=/app/.config/matplotlib
-
-# Buat folder config agar tidak error saat runtime
-RUN mkdir -p $STREAMLIT_HOME $MPLCONFIGDIR
-
+# Copy file requirements dan source
 COPY requirements.txt ./
 COPY src/ ./src/
 
+# Install dependencies
 RUN pip3 install -r requirements.txt
+
+# Create and give permissions to .streamlit and .config folders
+RUN mkdir -p /app/.streamlit /app/.config/matplotlib && \
+    chmod -R 777 /app/.streamlit /app/.config/matplotlib
+
+# Set environment variables
+ENV STREAMLIT_CONFIG_DIR=/app/.streamlit \
+    MPLCONFIGDIR=/app/.config/matplotlib \
+    STREAMLIT_HOME=/app/.streamlit
+
+# Optional: prevent Streamlit from collecting usage stats
+ENV STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
 
 EXPOSE 8501
 
