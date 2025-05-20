@@ -4,113 +4,139 @@ import utils.myFunc as mf
 
 def main():
     st.title("📊 AI Model Evaluation Summary")
-
     analyzer = mf.ExcelAnalyzer()
-
+ # ------------------------------------------------SIDEBAR-------------------------------------------
     st.sidebar.image("src/assets/ojk-logo-jpg.jpg")
+    with st.sidebar :
+        st.subheader('Settings :')
+        with st.expander("General Settings :"):
+            uploaded_files = st.file_uploader(
+                "Unggah berkas XLSX",
+                type=['xlsx'], accept_multiple_files=True)
+            st.caption("Upload satu atau beberapa file Excel (.xlsx)")
+            # st.markdown("---")
 
-    st.sidebar.header("📥 Upload & Pilih Parameter")
+# ---------------------------------------------------------------------------------------------------
+            if not uploaded_files:
+                st.info("Silakan upload minimal satu file Excel (.xlsx).")
+                return
 
-    uploaded_files = st.sidebar.file_uploader(
-        "Upload satu atau beberapa file Excel (.xlsx)",
-        type=['xlsx'], accept_multiple_files=True)
-
-
-    if not uploaded_files:
-        st.info("Silakan upload minimal satu file Excel (.xlsx) di sidebar.")
-        return
-
-    sheets = analyzer.get_all_sheet_names(uploaded_files)
-    if not sheets:
-        st.warning("Tidak ada sheet ditemukan di file yang diupload.")
-        return
-    default_sheet = "Sheet1"
-    sheet_choice = default_sheet if default_sheet in sheets else sheets[0]
+            sheets = analyzer.get_all_sheet_names(uploaded_files)
+            if not sheets:
+                st.warning("Tidak ada sheet ditemukan di file yang diupload.")
+                return
+            default_sheet = "Sheet1"
+            sheet_choice = default_sheet if default_sheet in sheets else sheets[0]
 
 
-    combined_df = analyzer.load_and_concat_sheets(uploaded_files, sheet_choice)
-    if combined_df is None or combined_df.empty:
-        st.warning("Data gabungan kosong atau gagal dibaca.")
-        return
+            combined_df = analyzer.load_and_concat_sheets(uploaded_files, sheet_choice)
+            if combined_df is None or combined_df.empty:
+                st.warning("Data gabungan kosong atau gagal dibaca.")
+                return
 
-    analyzer.df = combined_df
+            analyzer.df = combined_df
 
-    num_cols, cat_cols = analyzer.get_columns()
-    st.sidebar.markdown(f"**Kolom Numerik:** {' ; '.join(num_cols) if num_cols else 'Tidak ada'}")
-    st.sidebar.markdown(f"**Kolom Kategorikal:** {' ; '.join(cat_cols) if cat_cols else 'Tidak ada'}")
+            num_cols, cat_cols = analyzer.get_columns()
+            # st.caption(f"Kolom Numerik: {' ;'.join(num_cols) if num_cols else 'Tidak ada'}")
+            # st.caption(f"Kolom Kategorikal: {' ;'.join(cat_cols) if cat_cols else 'Tidak ada'}")
 
-    if len(cat_cols) == 0:
-        st.warning("Data gabungan tidak memiliki kolom kategorikal untuk analisis.")
-        return
+            if len(cat_cols) == 0:
+                st.warning("Data gabungan tidak memiliki kolom kategorikal untuk analisis.")
+                return
 
-    if analyzer.verif_col not in analyzer.df.columns:
-        st.warning(f"Kolom '{analyzer.verif_col}' tidak ditemukan di data gabungan.")
-        return
+            if analyzer.verif_col not in analyzer.df.columns:
+                st.warning(f"Kolom '{analyzer.verif_col}' tidak ditemukan di data gabungan.")
+                return
 
-    verif_options = analyzer.df[analyzer.verif_col].dropna().unique().tolist()
+            verif_options = analyzer.df[analyzer.verif_col].dropna().unique().tolist()
 
-    tab1, tab2, tab3 = st.tabs(["📈 Statistik Verifikasi", "📊 Analisis Data", "📚 Dokumentasi"])
+    tab1, tab2, tab3 = st.tabs(["📈 AI Model Eval", "📊 Analytics", "📚 Doc"])
 
     with tab1:
         st.header("Summary :")
-        df_counts, df_metrics = analyzer.calculate_confusion_stats()
+        df_counts, df_metrics, df_counts_total, df_metrics_total = analyzer.calculate_confusion_stats()
         if df_counts is None or df_metrics is None:
             st.warning("Data tidak mencukupi untuk menghitung statistik (pastikan kolom berisi 'True Positive', 'True Negative', 'False Positive', 'False Negative').")
         else:
-            st.subheader("Coef Matrix")
-            st.dataframe(df_counts.style.format({"Count": "{:,.0f}"}))
+            with st.expander ("Coef Matrix:"):
+                # st.subheader("Coef Matrix Per Key")
+                st.dataframe(df_counts.style.format({"Count": "{:,.0f}"}))
 
-            st.subheader("Metrics Evaluasi")
-            def fmt(val):
-                return f"{val:.4f}" if val is not None else "-"
-            st.dataframe(df_metrics.style.format({"Value": fmt}))
+                st.dataframe(df_counts_total.style.format({"Count": "{:,.0f}"}))
+            with st.expander ("Metrics:"):
+                # st.subheader("Metrics Evaluasi Per Key")
+                def fmt(val):
+                    return f"{val:.2f}" if val is not None else "-"
+                st.dataframe(df_metrics.style.format({"Value": fmt}))
+
+                def fmt(val):
+                    return f"{val:.2f}" if val is not None else "-"
+                st.dataframe(df_metrics_total.style.format({"Value": fmt}))
 
     with tab2:
-        st.header("Analisis Bar Chart dengan Filter Multi Verifikasi")
+        st.header("Bar Chart")
+        with st.sidebar :
+            with st.expander("Analytics Settings:"):
+                analyzer.category_col = st.selectbox("Pilih Kolom Kategori X-Bar", cat_cols)
 
-        analyzer.category_col = st.selectbox("Pilih Kolom Kategori untuk Analisis", cat_cols)
+                analyzer.selected_verif = st.multiselect(
+                    f"Pilih Y-Bar '{analyzer.verif_col}'",
+                    options=verif_options,
+                    default=verif_options[:1]
+                )
 
-        analyzer.selected_verif = st.multiselect(
-            f"Pilih satu atau beberapa kondisi '{analyzer.verif_col}'",
-            options=verif_options,
-            default=verif_options[:1]
-        )
+                analyzer.top_n = st.slider("Tentukan Top N: ", min_value=1, max_value=100, value=10)
 
-        analyzer.top_n = st.slider("Pilih Top N kategori untuk ditampilkan", min_value=1, max_value=100, value=10)
-
-        grouped = analyzer.filter_and_group()
+                grouped = analyzer.filter_and_group()
         if grouped.empty:
             st.info("Data tidak ditemukan untuk filter yang dipilih.")
         else:
             analyzer.plot_bar(grouped)
-            st.write("### 📋 Tabel Detail")
-            st.dataframe(grouped)
+            # st.write("### 📋 Tabel Detail")
+            with st.expander ("### 📋 Tabel Detail:"):
+                st.dataframe(grouped)
 
     with tab3:
-        st.header("Documentation")
+        st.subheader("📘 Documentation")
         st.markdown("""
-        ## How to Use the App
+        ### 🚀 Getting Started
 
-        1. Upload an Excel (.xlsx) file using the sidebar.
-        2. Select the sheet you want to analyze.
-        3. Choose the category column for analysis.
-        4. **Statistics Tab**: Displays counts and evaluation metrics based on verification categories.
-        5. **Data Analysis Tab**: Shows visualizations and tables with multi-verification filters.
-        6. **Documentation Tab**: Contains usage info and app credits.
+        Welcome to the AI Evaluation App! Here's how to use it:
 
-        ---
-
-        ## App Architecture
-        - **Backend**: Data manipulation with Pandas.
-        - **Visualization**: Matplotlib and Seaborn.
-        - **User Interface**: Streamlit with tab navigation.
+        1. **Upload** an Excel (.xlsx) file using the sidebar.
+        2. **Select** the sheet you want to work with.
+        3. **Choose** the category column (e.g., verification result).
+        4. Head over to the **Statistics** tab to see counts and evaluation metrics (Accuracy, F1 Score, etc.).
+        5. Use the **Data Analysis** tab to explore visualizations and filter data by multiple verification types.
+        6. This **Documentation** tab is here to guide you whenever you need help.
 
         ---
 
-        ## Credits
-        - Created by Naufal Nashif Imanuddin  
-        - Libraries used: Pandas, Streamlit, Matplotlib, Seaborn  
-        - Special thanks to the open-source community and official documentation.
+        ### 🧠 App Architecture
+
+        - **Backend**: Data processing with `Pandas`.
+        - **Visualization**: Powered by `Matplotlib` and `Seaborn`.
+        - **User Interface**: Built with `Streamlit` and organized via tab navigation.
+
+        ---
+
+        ### 🙌 Credits & Acknowledgements
+
+        - Created by **Naufal Nashif**
+        - Built with: `Pandas`, `Streamlit`, `Matplotlib`, `Seaborn`
+        - Special thanks to the open-source community and official documentation for continuous inspiration ✨
+
+        ---
+
+        ### 🔗 Source Code & Docs
+
+        Full source code and technical documentation available on GitHub:
+
+        ```
+        https://github.com/naufalnashif/rfojk-sreamlit-ai-eval
+        ```
+
+        Feel free to ⭐ the repo, fork it, or contribute!
 
         ---
         """)

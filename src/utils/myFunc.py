@@ -89,8 +89,39 @@ class ExcelAnalyzer:
         if self.df is None or self.verif_col not in self.df.columns or 'filename' not in self.df.columns:
             return None, None
 
-        count_rows = []
-        metric_rows = []
+        count_rows_perfile = []
+        metric_rows_perfile = []
+        count_rows_total = []
+        metric_rows_total = []
+
+        for filename, group in self.df.groupby("Key"):
+            counts = group[self.verif_col].value_counts()
+            TP = counts.get('True Positive', 0)
+            TN = counts.get('True Negative', 0)
+            FP = counts.get('False Positive', 0)
+            FN = counts.get('False Negative', 0)
+            total = TP + TN + FP + FN
+
+            accuracy = (TP + TN) / total if total else None
+            recall = TP / (TP + FN) if (TP + FN) else None
+            precision = TP / (TP + FP) if (TP + FP) else None
+            f1_score = (2 * precision * recall) / (precision + recall) if (precision and recall and (precision + recall)) else None
+
+            count_rows_perfile.append({
+                'filename': filename[:4],
+                'year': filename[5:9],
+                'type' : filename[10:],
+                'TP': TP, 'TN': TN, 'FP': FP, 'FN': FN, 'Total': total
+            })
+            metric_rows_perfile.append({
+                'filename': filename[:4],
+                'year': filename[5:9],
+                'type' : filename[10:],
+                'Accuracy': accuracy,
+                'Recall': recall,
+                'Precision': precision,
+                'F1 Score': f1_score
+            })
 
         for filename, group in self.df.groupby("filename"):
             counts = group[self.verif_col].value_counts()
@@ -105,23 +136,20 @@ class ExcelAnalyzer:
             precision = TP / (TP + FP) if (TP + FP) else None
             f1_score = (2 * precision * recall) / (precision + recall) if (precision and recall and (precision + recall)) else None
 
-            count_rows.append({
-                'filename': filename[-17:-8],
-                'year': filename[-12:-8],
-                'type' : filename[-7:-5],
+            count_rows_total.append({
+                '' : 'Total',    
                 'TP': TP, 'TN': TN, 'FP': FP, 'FN': FN, 'Total': total
             })
-
-            metric_rows.append({
-                'filename': filename[-17:-8],
-                'year': filename[-12:-8],
-                'type' : filename[-7:-5],
+            metric_rows_total.append({
+                '': 'Total',
                 'Accuracy': accuracy,
                 'Recall': recall,
                 'Precision': precision,
                 'F1 Score': f1_score
             })
 
-        df_counts = pd.DataFrame(count_rows)
-        df_metrics = pd.DataFrame(metric_rows)
-        return df_counts, df_metrics
+        df_counts = pd.DataFrame(count_rows_perfile)
+        df_metrics = pd.DataFrame(metric_rows_perfile)
+        df_counts_total = pd.DataFrame(count_rows_total)
+        df_metrics_total = pd.DataFrame(metric_rows_total)
+        return df_counts, df_metrics, df_counts_total, df_metrics_total
