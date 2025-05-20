@@ -41,8 +41,20 @@ A simple yet powerful Streamlit web app for analyzing and evaluating verificatio
 
 ## 🚀 Getting Started
 
+To get the github repo :
+```
+https://github.com/naufalnashif/rfojk-sreamlit-ai-eval
+```
+
 To run this app locally:
 
 ```bash
 pip install -r requirements.txt
 streamlit run app.py
+``` 
+
+To using the demo :
+``` huggingface
+https://huggingface.co/spaces/naufalnashif/rfojk-streamlit-ai-eval/blob/main/README.md
+```
+
