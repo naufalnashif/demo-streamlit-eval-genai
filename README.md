@@ -3,11 +3,12 @@ title: RF OJK Streamlit AI Eval
 emoji: 🚀
 colorFrom: red
 colorTo: red
-sdk: docker
+sdk: streamlit
 app_file: src/streamlit_app.py
-app_port: 8501
-tags:
-  - streamlit
+sdk_version: 1.45.1
+# app_port: 8501
+# tags:
+#   - streamlit
 pinned: false
 short_description: Streamlit template space
 license: mit
