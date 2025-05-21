@@ -7,9 +7,15 @@ class ExcelAnalyzer:
     def __init__(self):
         # Ubah jika kolom di file Excel Anda adalah 'Verifikasi Pengawas'
         self.verif_col = 'Verivikasi Pengawas'  
+        self.key_col = 'Key'  
+        # self.year_col = 'Verivikasi Pengawas'  
+        self.type_col = 'Type'  
         self.df = None
         self.category_col = None
         self.selected_verif = []
+        self.selected_key = []
+        # self.selected_year = None
+        self.selected_type = []
         self.top_n = 10
 
     def get_all_sheet_names(self, files):
@@ -54,12 +60,25 @@ class ExcelAnalyzer:
         if self.verif_col not in self.df.columns:
             return pd.DataFrame()
 
+        # Filter berdasarkan verifikasi
         filtered = self.df[self.df[self.verif_col].isin(self.selected_verif)]
 
+        # Filter berdasarkan key jika tidak memilih 'All'
+        if hasattr(self, 'selected_key') and self.selected_key:
+            if 'Key' in filtered.columns and self.selected_key != 'All':
+                filtered = filtered[filtered['Key'].isin(self.selected_key)]
+
+        # Filter berdasarkan type jika tidak memilih 'All'
+        if hasattr(self, 'selected_type') and self.selected_type:
+            if 'Type' in filtered.columns and self.selected_type != 'All':
+                filtered = filtered[filtered['Type'].isin(self.selected_type)]
+
+        # Grouping by category
         grouped = filtered[self.category_col].value_counts().reset_index()
         grouped.columns = [self.category_col, 'Jumlah']
         grouped['Jumlah'] = grouped['Jumlah'].astype(int)
         grouped = grouped.head(self.top_n)
+
         return grouped
 
     def plot_bar(self, grouped):
@@ -105,6 +124,7 @@ class ExcelAnalyzer:
             accuracy = (TP + TN) / total if total else None
             recall = TP / (TP + FN) if (TP + FN) else None
             precision = TP / (TP + FP) if (TP + FP) else None
+            specificity = TN / (TN + FP) if (TN + FP) else None
             f1_score = (2 * precision * recall) / (precision + recall) if (precision and recall and (precision + recall)) else None
 
             count_rows_perfile.append({
@@ -118,6 +138,7 @@ class ExcelAnalyzer:
                 'year': filename[5:9],
                 'type' : filename[10:],
                 'Accuracy': accuracy,
+                'Specificity' : specificity,
                 'Recall': recall,
                 'Precision': precision,
                 'F1 Score': f1_score
@@ -134,6 +155,7 @@ class ExcelAnalyzer:
             accuracy = (TP + TN) / total if total else None
             recall = TP / (TP + FN) if (TP + FN) else None
             precision = TP / (TP + FP) if (TP + FP) else None
+            specificity = TN / (TN + FP) if (TN + FP) else None
             f1_score = (2 * precision * recall) / (precision + recall) if (precision and recall and (precision + recall)) else None
 
             count_rows_total.append({
@@ -143,6 +165,7 @@ class ExcelAnalyzer:
             metric_rows_total.append({
                 '': 'Total',
                 'Accuracy': accuracy,
+                'Specificity' : specificity,
                 'Recall': recall,
                 'Precision': precision,
                 'F1 Score': f1_score

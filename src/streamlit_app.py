@@ -49,6 +49,8 @@ def main():
                 return
 
             verif_options = analyzer.df[analyzer.verif_col].dropna().unique().tolist()
+            key_options = analyzer.df[analyzer.key_col].dropna().unique().tolist()
+            type_options = analyzer.df[analyzer.type_col].dropna().unique().tolist()
 
     tab1, tab2, tab3 = st.tabs(["📈 AI Model Eval", "📊 Analytics", "📚 Doc"])
 
@@ -77,10 +79,31 @@ def main():
         st.header("Bar Chart")
         with st.sidebar :
             with st.expander("Analytics Settings:"):
-                analyzer.category_col = st.selectbox("Pilih Kolom Kategori X-Bar", cat_cols)
+                # Tambahkan opsi 'All' di awal
+                key_options_with_all = ['All'] + key_options
+                type_options_with_all = ['All'] + type_options
+
+                # Multiselect dengan default 'All'
+                selected_key_raw = st.multiselect(
+                    "Pilih Key:",
+                    options=key_options_with_all,
+                    default=['All']
+                )
+
+                selected_type_raw = st.multiselect(
+                    "Pilih Type:",
+                    options=type_options_with_all,
+                    default=['All']
+                )
+
+                analyzer.category_col = st.selectbox("Pilih Kolom Kategori Y-Bar", cat_cols)
+
+                # Logika: jika 'All' dipilih, maka ambil semua opsi asli
+                analyzer.selected_key = key_options if 'All' in selected_key_raw else selected_key_raw
+                analyzer.selected_type = type_options if 'All' in selected_type_raw else selected_type_raw
 
                 analyzer.selected_verif = st.multiselect(
-                    f"Pilih Y-Bar '{analyzer.verif_col}'",
+                    f"Pilih X-Bar '{analyzer.verif_col}'",
                     options=verif_options,
                     default=verif_options[:1]
                 )
@@ -88,6 +111,7 @@ def main():
                 analyzer.top_n = st.slider("Tentukan Top N: ", min_value=1, max_value=100, value=10)
 
                 grouped = analyzer.filter_and_group()
+                
         if grouped.empty:
             st.info("Data tidak ditemukan untuk filter yang dipilih.")
         else:
