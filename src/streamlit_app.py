@@ -123,7 +123,7 @@ def main():
             with st.expander(f"### 📋 Tabel Detail {analyzer.category_col}:"):
                 st.dataframe(grouped_detail)
 
-            with st.expander(f"### 📋 Tabel Detail {analyzer.category_col} and Criteria:"):
+            with st.expander(f"### 📋 Tabel Detail {analyzer.category_col} and Refinement Parameter:"):
                 df = grouped_with_criteria.copy()
 
                 # Filter berdasarkan analyzer.category_col (selectbox dengan opsi 'All')
