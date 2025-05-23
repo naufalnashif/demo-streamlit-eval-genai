@@ -96,7 +96,11 @@ def main():
                     default=['All']
                 )
 
-                analyzer.category_col = st.selectbox("Pilih Kolom Kategori Y-Bar", cat_cols)
+                # Batasi pilihan hanya ke kolom yang kamu mau
+                allowed_cat_cols = ['Key', 'Type', 'Bab', 'Emiten']
+                cat_cols_filtered = [col for col in cat_cols if col in allowed_cat_cols]
+
+                analyzer.category_col = st.selectbox("Pilih Kolom Kategori Y-Bar", cat_cols_filtered)
 
                 # Logika: jika 'All' dipilih, maka ambil semua opsi asli
                 analyzer.selected_key = key_options if 'All' in selected_key_raw else selected_key_raw
@@ -120,7 +124,20 @@ def main():
                 st.dataframe(grouped_detail)
 
             with st.expander(f"### 📋 Tabel Detail {analyzer.category_col} and Criteria:"):
-                st.dataframe(grouped_with_criteria)
+                df = grouped_with_criteria.copy()
+
+                # Filter berdasarkan analyzer.category_col (selectbox dengan opsi 'All')
+                category_col = analyzer.category_col
+                if category_col in df.columns:
+                    category_values = sorted(df[category_col].dropna().unique().tolist())
+                    category_options = ['All'] + category_values
+                    selected_value = st.selectbox(f"Filter {category_col}:", category_options)
+
+                    if selected_value != 'All':
+                        df = df[df[category_col] == selected_value]
+
+                # Tampilkan dataframe yang telah difilter
+                st.dataframe(df, use_container_width=True)
 
     with tab3:
         st.subheader("📘 Documentation")

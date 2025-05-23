@@ -118,6 +118,8 @@ class ExcelAnalyzer:
             .size()
             .reset_index(name='Jumlah')
             .sort_values('Jumlah', ascending=False)
+            .reset_index(drop=True)  # 🔧 Tambahkan ini
+            # .head(self.top_n)
         )
 
         return grouped, grouped_detail,grouped_with_criteria
