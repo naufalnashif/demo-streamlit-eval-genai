@@ -81,6 +81,47 @@ class ExcelAnalyzer:
 
         return grouped
 
+    def filter_and_group(self):
+        if self.df is None or self.category_col is None or not self.selected_verif:
+            return pd.DataFrame()
+        if self.verif_col not in self.df.columns:
+            return pd.DataFrame()
+
+        # Filter berdasarkan verifikasi
+        filtered = self.df[self.df[self.verif_col].isin(self.selected_verif)]
+
+        # Filter berdasarkan key jika tidak memilih 'All'
+        if hasattr(self, 'selected_key') and self.selected_key:
+            if 'Key' in filtered.columns and self.selected_key != 'All':
+                filtered = filtered[filtered['Key'].isin(self.selected_key)]
+
+        # Filter berdasarkan type jika tidak memilih 'All'
+        if hasattr(self, 'selected_type') and self.selected_type:
+            if 'Type' in filtered.columns and self.selected_type != 'All':
+                filtered = filtered[filtered['Type'].isin(self.selected_type)]
+
+        # Pastikan kolom 'Kriteria' ada
+        if 'Refinement Parameter' not in filtered.columns:
+            return pd.DataFrame()
+        
+        # Grouping by category
+        grouped = filtered[self.category_col].value_counts().reset_index()
+        grouped.columns = [self.category_col, 'Jumlah']
+        grouped['Jumlah'] = grouped['Jumlah'].astype(int)
+        grouped_detail = grouped.copy()
+        grouped = grouped.head(self.top_n)
+
+        # Group by category_col dan Kriteria
+        grouped_with_criteria = (
+            filtered
+            .groupby([self.category_col, 'Refinement Parameter'])
+            .size()
+            .reset_index(name='Jumlah')
+            .sort_values('Jumlah', ascending=False)
+        )
+
+        return grouped, grouped_detail,grouped_with_criteria
+
     def plot_bar(self, grouped):
         plt.figure(figsize=(10, 6))
         barplot = sns.barplot(data=grouped, x='Jumlah', y=self.category_col, palette='mako')

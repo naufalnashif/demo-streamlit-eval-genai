@@ -110,15 +110,17 @@ def main():
 
                 analyzer.top_n = st.slider("Tentukan Top N: ", min_value=1, max_value=100, value=10)
 
-                grouped = analyzer.filter_and_group()
+                grouped, grouped_detail, grouped_with_criteria = analyzer.filter_and_group()
                 
         if grouped.empty:
             st.info("Data tidak ditemukan untuk filter yang dipilih.")
         else:
             analyzer.plot_bar(grouped)
-            # st.write("### 📋 Tabel Detail")
-            with st.expander ("### 📋 Tabel Detail:"):
-                st.dataframe(grouped)
+            with st.expander(f"### 📋 Tabel Detail {analyzer.category_col}:"):
+                st.dataframe(grouped_detail)
+
+            with st.expander(f"### 📋 Tabel Detail {analyzer.category_col} and Criteria:"):
+                st.dataframe(grouped_with_criteria)
 
     with tab3:
         st.subheader("📘 Documentation")
