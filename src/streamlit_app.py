@@ -4,7 +4,7 @@ import utils.myFunc as mf
 
 def main():
     st.set_page_config(layout="wide")
-    st.title("📊 AI Model Evaluation Summary")
+    st.title("📊 AI Model Evaluation Dashboard")
     analyzer = mf.ExcelAnalyzer()
  # ------------------------------------------------SIDEBAR-------------------------------------------
     st.sidebar.image("src/assets/ojk-logo-jpg.jpg")
@@ -116,10 +116,10 @@ def main():
                     default=['All']
                 )
 
-                selected_type_raw = st.multiselect(
+                selected_type_raw = st.selectbox(
                     "Pilih Type:",
                     options=type_options_with_all,
-                    default=['All']
+                    index=type_options_with_all.index('All') if 'All' in type_options_with_all else 0
                 )
 
                 # Batasi pilihan hanya ke kolom yang kamu mau
@@ -170,14 +170,13 @@ def main():
         st.markdown("""
         ### 🚀 Getting Started
 
-        Welcome to the AI Evaluation App! Here's how to use it:
+        Welcome to the AI Evaluation Dashboard! Here's how to use it:
 
         1. **Upload** an Excel (.xlsx) file using the sidebar.
-        2. **Select** the sheet you want to work with.
-        3. **Choose** the category column (e.g., verification result).
-        4. Head over to the **Statistics** tab to see counts and evaluation metrics (Accuracy, F1 Score, etc.).
-        5. Use the **Data Analysis** tab to explore visualizations and filter data by multiple verification types.
-        6. This **Documentation** tab is here to guide you whenever you need help.
+        2. **Choose** the category column (e.g., verification result).
+        3. Head over to the **Statistics** tab to see counts and evaluation metrics (Accuracy, F1 Score, etc.).
+        4. Use the **Data Analysis** tab to explore visualizations and filter data by multiple verification types.
+        5. This **Documentation** tab is here to guide you whenever you need help.
 
         ---
 

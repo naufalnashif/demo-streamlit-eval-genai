@@ -56,9 +56,9 @@ class ExcelAnalyzer:
 
     def filter_and_group(self):
         if self.df is None or self.category_col is None or not self.selected_verif:
-            return pd.DataFrame()
+            return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
         if self.verif_col not in self.df.columns:
-            return pd.DataFrame()
+            return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
 
         # Filter berdasarkan verifikasi
         filtered = self.df[self.df[self.verif_col].isin(self.selected_verif)]
@@ -73,37 +73,10 @@ class ExcelAnalyzer:
             if 'Type' in filtered.columns and self.selected_type != 'All':
                 filtered = filtered[filtered['Type'].isin(self.selected_type)]
 
-        # Grouping by category
-        grouped = filtered[self.category_col].value_counts().reset_index()
-        grouped.columns = [self.category_col, 'Jumlah']
-        grouped['Jumlah'] = grouped['Jumlah'].astype(int)
-        grouped = grouped.head(self.top_n)
-
-        return grouped
-
-    def filter_and_group(self):
-        if self.df is None or self.category_col is None or not self.selected_verif:
-            return pd.DataFrame()
-        if self.verif_col not in self.df.columns:
-            return pd.DataFrame()
-
-        # Filter berdasarkan verifikasi
-        filtered = self.df[self.df[self.verif_col].isin(self.selected_verif)]
-
-        # Filter berdasarkan key jika tidak memilih 'All'
-        if hasattr(self, 'selected_key') and self.selected_key:
-            if 'Key' in filtered.columns and self.selected_key != 'All':
-                filtered = filtered[filtered['Key'].isin(self.selected_key)]
-
-        # Filter berdasarkan type jika tidak memilih 'All'
-        if hasattr(self, 'selected_type') and self.selected_type:
-            if 'Type' in filtered.columns and self.selected_type != 'All':
-                filtered = filtered[filtered['Type'].isin(self.selected_type)]
-
-        # Pastikan kolom 'Kriteria' ada
+        # Pastikan kolom 'Refinement Parameter' ada
         if 'Refinement Parameter' not in filtered.columns:
-            return pd.DataFrame()
-        
+            return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+
         # Grouping by category
         grouped = filtered[self.category_col].value_counts().reset_index()
         grouped.columns = [self.category_col, 'Jumlah']
@@ -118,11 +91,10 @@ class ExcelAnalyzer:
             .size()
             .reset_index(name='Jumlah')
             .sort_values('Jumlah', ascending=False)
-            .reset_index(drop=True)  # 🔧 Tambahkan ini
-            # .head(self.top_n)
+            .reset_index(drop=True)
         )
 
-        return grouped, grouped_detail,grouped_with_criteria
+        return grouped, grouped_detail, grouped_with_criteria
 
     def plot_bar(self, grouped):
         plt.figure(figsize=(10, 6))
