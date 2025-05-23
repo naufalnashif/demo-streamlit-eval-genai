@@ -63,18 +63,43 @@ def main():
         else:
             with st.expander ("Coef Matrix:"):
                 # st.subheader("Coef Matrix Per Key")
-                st.dataframe(df_counts.style.format({"Count": "{:,.0f}"}))
+                st.dataframe(
+                    df_counts.style
+                        .format({"Count": "{:,.0f}"})
+                        .highlight_max(
+                            subset=["TP", "FP", "FN", "TN", "Total"],
+                            axis=0,
+                            props='background-color: #ffdd57; color: black;'
+                        ))
 
                 st.dataframe(df_counts_total.style.format({"Count": "{:,.0f}"}))
             with st.expander ("Metrics:"):
                 # st.subheader("Metrics Evaluasi Per Key")
-                def fmt(val):
-                    return f"{val:.2f}" if val is not None else "-"
-                st.dataframe(df_metrics.style.format({"Value": fmt}))
+                import pandas as pd
+                # Format ke persen dan warnai berdasarkan threshold
+                def highlight_metric(val):
+                    if pd.isna(val):
+                        return ''
+                    elif val >= 0.8:
+                        # return 'background-color: #bfff00; color: black;'  # hijau muda
+                        return ''
+                    else:
+                        return 'background-color: #e97451; color: white;'  # merah kecoklatan
 
+                # Format ke persen
                 def fmt(val):
-                    return f"{val:.2f}" if val is not None else "-"
-                st.dataframe(df_metrics_total.style.format({"Value": fmt}))
+                    return f"{val:.2%}" if pd.notna(val) else "-"
+
+                # Kolom yang ingin diformat & highlight
+                highlight_cols = ["Accuracy", "Specificity", "Recall", "Precision", "F1 Score"]
+
+                # Terapkan di Streamlit
+                st.dataframe(
+                    df_metrics.style
+                        .format({col: fmt for col in highlight_cols})
+                        .applymap(highlight_metric, subset=highlight_cols)
+                )
+                st.dataframe(df_metrics_total.style.format({col: fmt for col in highlight_cols}))
 
     with tab2:
         st.header("Bar Chart")
