@@ -3,6 +3,7 @@ import utils.myFunc as mf
 
 
 def main():
+    st.set_page_config(layout="wide")
     st.title("📊 AI Model Evaluation Summary")
     analyzer = mf.ExcelAnalyzer()
  # ------------------------------------------------SIDEBAR-------------------------------------------
