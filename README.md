@@ -14,6 +14,9 @@ short_description: Streamlit template space
 license: mit
 ---
 
+
+![Demo Video](src/assets/streamlit-demo.gif)
+
 # Rfojk Streamlit AI Eval
 
 A Streamlit app for evaluating AI model predictions in real-time.
@@ -55,6 +58,6 @@ streamlit run app.py
 
 To using the demo :
 ``` huggingface
-https://huggingface.co/spaces/naufalnashif/rfojk-streamlit-ai-eval/blob/main/README.md
+https://huggingface.co/spaces/naufalnashif/rfojk-streamlit-ai-eval/
 ```
 
