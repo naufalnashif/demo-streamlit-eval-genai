@@ -5,54 +5,61 @@ import utils.myFunc as mf
 def main():
     st.set_page_config(layout="wide")
     st.title("📊 AI Model Evaluation Dashboard")
+
     analyzer = mf.ExcelAnalyzer()
- # ------------------------------------------------SIDEBAR-------------------------------------------
+
+    # ------------------------ SIDEBAR ----------------------------
     st.sidebar.image("src/assets/ojk-logo-jpg.jpg")
-    with st.sidebar :
+    with st.sidebar:
         st.subheader('Settings :')
         with st.expander("General Settings :"):
             uploaded_files = st.file_uploader(
                 "Unggah berkas XLSX",
-                type=['xlsx'], accept_multiple_files=True)
-            st.caption("Upload satu atau beberapa file Excel (.xlsx)")
-            # st.markdown("---")
+                type=['xlsx'], accept_multiple_files=True
+            )
+            st.info("Silakan upload minimal satu file Excel (.xlsx).")
+    # ---------------------- VIDEO SECTION ------------------------
+    if not uploaded_files:
+        st.video(
+            "src/assets/video-streamlit-demo.mp4",
+            format="video/mp4",
+            start_time="1s",
+            end_time="1m36s",
+            loop=True,
+            autoplay=True,
+            muted=True
+        )
+        return
 
-# ---------------------------------------------------------------------------------------------------
-            if not uploaded_files:
-                st.info("Silakan upload minimal satu file Excel (.xlsx).")
-                return
+    # ------------------- PROSES DATASET -------------------------
+    sheets = analyzer.get_all_sheet_names(uploaded_files)
+    if not sheets:
+        st.warning("Tidak ada sheet ditemukan di file yang diupload.")
+        return
 
-            sheets = analyzer.get_all_sheet_names(uploaded_files)
-            if not sheets:
-                st.warning("Tidak ada sheet ditemukan di file yang diupload.")
-                return
-            default_sheet = "Sheet1"
-            sheet_choice = default_sheet if default_sheet in sheets else sheets[0]
+    default_sheet = "Sheet1"
+    sheet_choice = default_sheet if default_sheet in sheets else sheets[0]
 
+    combined_df = analyzer.load_and_concat_sheets(uploaded_files, sheet_choice)
+    if combined_df is None or combined_df.empty:
+        st.warning("Data gabungan kosong atau gagal dibaca.")
+        return
 
-            combined_df = analyzer.load_and_concat_sheets(uploaded_files, sheet_choice)
-            if combined_df is None or combined_df.empty:
-                st.warning("Data gabungan kosong atau gagal dibaca.")
-                return
+    analyzer.df = combined_df
 
-            analyzer.df = combined_df
+    num_cols, cat_cols = analyzer.get_columns()
 
-            num_cols, cat_cols = analyzer.get_columns()
-            # st.caption(f"Kolom Numerik: {' ;'.join(num_cols) if num_cols else 'Tidak ada'}")
-            # st.caption(f"Kolom Kategorikal: {' ;'.join(cat_cols) if cat_cols else 'Tidak ada'}")
+    if len(cat_cols) == 0:
+        st.warning("Data gabungan tidak memiliki kolom kategorikal untuk analisis.")
+        return
 
-            if len(cat_cols) == 0:
-                st.warning("Data gabungan tidak memiliki kolom kategorikal untuk analisis.")
-                return
+    if analyzer.verif_col not in analyzer.df.columns:
+        st.warning(f"Kolom '{analyzer.verif_col}' tidak ditemukan di data gabungan.")
+        return
 
-            if analyzer.verif_col not in analyzer.df.columns:
-                st.warning(f"Kolom '{analyzer.verif_col}' tidak ditemukan di data gabungan.")
-                return
-
-            verif_options = analyzer.df[analyzer.verif_col].dropna().unique().tolist()
-            key_options = analyzer.df[analyzer.key_col].dropna().unique().tolist()
-            type_options = analyzer.df[analyzer.type_col].dropna().unique().tolist()
-
+    verif_options = analyzer.df[analyzer.verif_col].dropna().unique().tolist()
+    key_options = analyzer.df[analyzer.key_col].dropna().unique().tolist()
+    type_options = analyzer.df[analyzer.type_col].dropna().unique().tolist()
     tab1, tab2, tab3 = st.tabs(["📈 AI Model Eval", "📊 Analytics", "📚 Doc"])
 
     with tab1:
