@@ -58,6 +58,6 @@ streamlit run app.py
 
 To using the demo :
 ``` huggingface
-https://huggingface.co/spaces/naufalnashif/rfojk-streamlit-ai-eval/
+https://huggingface.co/spaces/naufalnashif/rfojk-streamlit-ai-eval/blob/main/README.md
 ```
 
