@@ -142,18 +142,23 @@ class ExcelAnalyzer:
             specificity = TN / (TN + FP) if (TN + FP) else None
             f1_score = (2 * precision * recall) / (precision + recall) if (precision and recall and (precision + recall)) else None
 
+            # Pisahkan komponen berdasarkan underscore
+            key_part, year_part, type_part = filename.split('_')
+
+            # Gunakan hasil pemisahan untuk membuat dict
             count_rows_perfile.append({
-                'filename': filename[:4],
-                'year': filename[5:9],
-                'type' : filename[10:],
+                'filename': key_part,
+                'year': year_part,
+                'type': type_part,
                 'TP': TP, 'TN': TN, 'FP': FP, 'FN': FN, 'Total': total
             })
+
             metric_rows_perfile.append({
-                'filename': filename[:4],
-                'year': filename[5:9],
-                'type' : filename[10:],
+                'filename': key_part,
+                'year': year_part,
+                'type': type_part,
                 'Accuracy': accuracy,
-                'Specificity' : specificity,
+                'Specificity': specificity,
                 'Recall': recall,
                 'Precision': precision,
                 'F1 Score': f1_score
