@@ -15,7 +15,8 @@ license: mit
 ---
 
 
-![Demo Video](src/assets/streamlit-demo.gif)
+<!-- ![Demo Video](src/assets/streamlit-demo.gif) -->
+![Demo Video](https://huggingface.co/datasets/naufalnashif/assets-rfojk/resolve/main/streamlit-demo.gif)
 
 # Rfojk Streamlit AI Eval
 

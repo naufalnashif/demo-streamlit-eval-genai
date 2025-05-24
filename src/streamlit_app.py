@@ -21,7 +21,7 @@ def main():
     # ---------------------- VIDEO SECTION ------------------------
     if not uploaded_files:
         # st.video(
-        #     "src/assets/video-streamlit-demo.mp4",
+        #     "https://huggingface.co/datasets/naufalnashif/assets-rfojk/resolve/main/video-streamlit-demo.mp4",
         #     format="video/mp4",
         #     start_time="1s",
         #     end_time="1m36s",
@@ -29,7 +29,8 @@ def main():
         #     autoplay=True,
         #     muted=True
         # )
-        st.image("src/assets/streamlit-demo.gif", use_column_width=True)
+        # st.image("src/assets/streamlit-demo.gif", use_column_width=True)
+        st.image("https://huggingface.co/datasets/naufalnashif/assets-rfojk/resolve/main/streamlit-demo.gif")
         return
 
     # ------------------- PROSES DATASET -------------------------
