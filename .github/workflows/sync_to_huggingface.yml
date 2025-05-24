@@ -14,10 +14,17 @@ jobs:
           fetch-depth: 0
           lfs: true
 
+      - name: Install Git LFS
+        run: |
+          sudo apt-get update
+          sudo apt-get install git-lfs
+          git lfs install
+
       - name: Set Git identity
         run: |
           git config --global user.email "naufalnashif.imanuddin@gmail.com"
           git config --global user.name "naufalnashif"
+
       - name: Add Hugging Face remote and push
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
