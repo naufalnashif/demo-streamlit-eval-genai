@@ -20,17 +20,15 @@ def main():
             st.info("Silakan upload minimal satu file Excel (.xlsx).")
     # ---------------------- VIDEO SECTION ------------------------
     if not uploaded_files:
-        # st.video(
-        #     "https://huggingface.co/datasets/naufalnashif/assets-rfojk/resolve/main/video-streamlit-demo.mp4",
-        #     format="video/mp4",
-        #     start_time="1s",
-        #     end_time="1m36s",
-        #     loop=True,
-        #     autoplay=True,
-        #     muted=True
-        # )
+        st.video(
+            "https://huggingface.co/datasets/naufalnashif/assets-rfojk/resolve/main/video-streamlit-demo-compress.mp4",
+            format="video/mp4",
+            loop=True,
+            autoplay=True,
+            muted=True
+        )
         # st.image("src/assets/streamlit-demo.gif", use_column_width=True)
-        st.image("https://huggingface.co/datasets/naufalnashif/assets-rfojk/resolve/main/streamlit-demo.gif")
+        # st.image("https://huggingface.co/datasets/naufalnashif/assets-rfojk/resolve/main/streamlit-demo.gif")
         return
 
     # ------------------- PROSES DATASET -------------------------
