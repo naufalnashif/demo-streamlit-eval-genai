@@ -20,15 +20,16 @@ def main():
             st.info("Silakan upload minimal satu file Excel (.xlsx).")
     # ---------------------- VIDEO SECTION ------------------------
     if not uploaded_files:
-        st.video(
-            "src/assets/video-streamlit-demo.mp4",
-            format="video/mp4",
-            start_time="1s",
-            end_time="1m36s",
-            loop=True,
-            autoplay=True,
-            muted=True
-        )
+        # st.video(
+        #     "src/assets/video-streamlit-demo.mp4",
+        #     format="video/mp4",
+        #     start_time="1s",
+        #     end_time="1m36s",
+        #     loop=True,
+        #     autoplay=True,
+        #     muted=True
+        # )
+        st.image("src/assets/streamlit-demo.gif", use_column_width=True)
         return
 
     # ------------------- PROSES DATASET -------------------------
