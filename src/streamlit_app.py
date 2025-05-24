@@ -139,7 +139,8 @@ def main():
 
                 # Logika: jika 'All' dipilih, maka ambil semua opsi asli
                 analyzer.selected_key = key_options if 'All' in selected_key_raw else selected_key_raw
-                analyzer.selected_type = type_options if 'All' in selected_type_raw else selected_type_raw
+                # analyzer.selected_type = type_options if 'All' in selected_type_raw else selected_type_raw
+                analyzer.selected_type = type_options if selected_type_raw == 'All' else [selected_type_raw]
 
                 analyzer.selected_verif = st.multiselect(
                     f"Pilih X-Bar '{analyzer.verif_col}'",
