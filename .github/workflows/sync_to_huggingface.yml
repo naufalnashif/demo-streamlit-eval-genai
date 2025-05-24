@@ -19,9 +19,14 @@ jobs:
           git config --global user.email "naufalnashif.imanuddin@gmail.com"
           git config --global user.name "naufalnashif"
 
-      - name: Add Hugging Face remote and push
+      - name: Add Hugging Face remote
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           git remote add hf https://naufalnashif:$HF_TOKEN@huggingface.co/spaces/naufalnashif/rfojk-streamlit-ai-eval
-          git push --force hf master:main
+
+      - name: Push LFS objects to HF
+        run: git lfs push --all hf main
+
+      - name: Push branch to HF
+        run: git push --force hf master:main
