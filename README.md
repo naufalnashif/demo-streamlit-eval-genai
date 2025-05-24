@@ -15,7 +15,7 @@ license: mit
 ---
 
 
-<!-- ![Demo Video](src/assets/streamlit-demo.gif) -->
+![Demo Video](src/assets/streamlit-demo.gif)
 
 # Rfojk Streamlit AI Eval
 

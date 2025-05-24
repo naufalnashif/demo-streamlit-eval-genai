@@ -29,7 +29,7 @@ def main():
         #     autoplay=True,
         #     muted=True
         # )
-        # st.image("src/assets/streamlit-demo.gif", use_column_width=True)
+        st.image("src/assets/streamlit-demo.gif", use_column_width=True)
         return
 
     # ------------------- PROSES DATASET -------------------------
