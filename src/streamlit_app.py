@@ -1,6 +1,7 @@
 import streamlit as st
-import utils.myFunc as mf
-
+from io import BytesIO
+import requests
+import utils.myFunc as mf 
 
 def main():
     st.set_page_config(layout="wide")
@@ -13,13 +14,38 @@ def main():
     with st.sidebar:
         st.subheader('Settings :')
         with st.expander("General Settings :"):
-            uploaded_files = st.file_uploader(
-                "Unggah berkas XLSX",
-                type=['xlsx'], accept_multiple_files=True
+
+            # Pilih sumber data
+            data_source = st.radio(
+                "Pilih sumber data:",
+                options=["Upload File", "Gunakan Demo Dummy Data"],
+                index=0
             )
-            st.info("Silakan upload minimal satu file Excel (.xlsx).")
+
+            input_files = None  # Gunakan ini sebagai pengganti uploaded_files
+
+            if data_source == "Upload File":
+                uploaded_files = st.file_uploader(
+                    "Unggah berkas XLSX",
+                    type=['xlsx'], accept_multiple_files=True
+                )
+                if uploaded_files:
+                    input_files = uploaded_files
+                st.info("Silakan upload minimal satu file Excel (.xlsx).")
+
+            else:  # Gunakan demo dummy dari huggingface
+                demo_url = "https://huggingface.co/datasets/naufalnashif/assets-rfojk/resolve/main/RFOJK20250524_df_joined_demo.xlsx"
+                try:
+                    response = requests.get(demo_url)
+                    demo_file = BytesIO(response.content)
+                    demo_file.name = "RFOJK20250524_df_joined_demo.xlsx"
+                    input_files = [demo_file]  # agar serupa dengan uploaded_files
+                    st.success("Demo data berhasil dimuat.")
+                except Exception as e:
+                    st.error(f"Gagal memuat demo data: {e}")
+
     # ---------------------- VIDEO SECTION ------------------------
-    if not uploaded_files:
+    if not input_files:
         st.video(
             "https://huggingface.co/datasets/naufalnashif/assets-rfojk/resolve/main/video-streamlit-demo-compress.mp4",
             format="video/mp4",
@@ -27,12 +53,10 @@ def main():
             autoplay=True,
             muted=True
         )
-        # st.image("src/assets/streamlit-demo.gif", use_column_width=True)
-        # st.image("https://huggingface.co/datasets/naufalnashif/assets-rfojk/resolve/main/streamlit-demo.gif")
-        return
+        st.stop()
 
     # ------------------- PROSES DATASET -------------------------
-    sheets = analyzer.get_all_sheet_names(uploaded_files)
+    sheets = analyzer.get_all_sheet_names(input_files)
     if not sheets:
         st.warning("Tidak ada sheet ditemukan di file yang diupload.")
         return
@@ -40,7 +64,7 @@ def main():
     default_sheet = "Sheet1"
     sheet_choice = default_sheet if default_sheet in sheets else sheets[0]
 
-    combined_df = analyzer.load_and_concat_sheets(uploaded_files, sheet_choice)
+    combined_df = analyzer.load_and_concat_sheets(input_files, sheet_choice)
     if combined_df is None or combined_df.empty:
         st.warning("Data gabungan kosong atau gagal dibaca.")
         return
@@ -60,6 +84,7 @@ def main():
     verif_options = analyzer.df[analyzer.verif_col].dropna().unique().tolist()
     key_options = analyzer.df[analyzer.key_col].dropna().unique().tolist()
     type_options = analyzer.df[analyzer.type_col].dropna().unique().tolist()
+
     tab1, tab2, tab3 = st.tabs(["📈 AI Model Eval", "📊 Analytics", "📚 Doc"])
 
     with tab1:
