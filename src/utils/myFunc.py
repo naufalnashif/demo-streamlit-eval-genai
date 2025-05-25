@@ -215,6 +215,16 @@ class UIComponents:
                 margin: 0;
             }
 
+            /* Responsive styles for smaller screens */
+            @media only screen and (max-width: 600px) {
+                .typewriter h2 {
+                    font-size: 1rem;
+                    white-space: normal; /* wrap text */
+                    animation: none; /* disable typewriter effect */
+                    border-right: none;
+                }
+            }
+
             @keyframes typing {
                 from { width: 0 }
                 to { width: 42ch }
@@ -279,18 +289,18 @@ class UIComponents:
     @staticmethod
     def render_footer():
         year_now = datetime.now().year
-        st.markdown("""
+        st.markdown(f"""
         <style>
-        .wrapper {
+        .wrapper {{
             width: 100%;
             overflow: hidden;
             position: relative;
             height: 40px;
             margin-top: 10px;
             margin-bottom: 30px;
-        }
+        }}
 
-        .scrolling-container {
+        .scrolling-container {{
             display: flex;
             align-items: center;
             white-space: nowrap;
@@ -298,28 +308,48 @@ class UIComponents:
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #aaa;
             filter: grayscale(100%);
-        }
+        }}
 
-        @keyframes scroll-left {
-            0% {
+        @keyframes scroll-left {{
+            0% {{
                 transform: translateX(100%);
-            }
-            100% {
+            }}
+            100% {{
                 transform: translateX(-100%);
-            }
-        }
+            }}
+        }}
 
-        .logo {
+        .logo {{
             height: 24px;
             vertical-align: middle;
             margin: 0 1rem;
             opacity: 0.7;
-        }
+        }}
 
-        .scroll-text {
+        .scroll-text {{
             font-size: 1.1rem;
             display: inline;
-        }
+        }}
+
+        /* Responsif untuk HP */
+        @media only screen and (max-width: 600px) {{
+            .wrapper {{
+                height: 50px;
+            }}
+
+            .logo {{
+                height: 18px;
+                margin: 0 0.5rem;
+            }}
+
+            .scroll-text {{
+                font-size: 0.85rem;
+            }}
+
+            .scrolling-container {{
+                animation-duration: 30s; /* Lebih lambat di layar kecil */
+            }}
+        }}
         </style>
 
         <div class="wrapper">
