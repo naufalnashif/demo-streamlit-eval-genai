@@ -240,6 +240,7 @@ class UIComponents:
                 <h2>📊 Welcome to AI Model Evaluation Dashboard</h2>
             </div>
         """, unsafe_allow_html=True)
+        st.divider()
 
     @staticmethod 
     def render_doc():
@@ -366,7 +367,7 @@ class UIComponents:
             }}
 
             .scrolling-container {{
-                animation-duration: 30s;
+                animation-duration: 35s;
             }}
         }}
         </style>
@@ -378,7 +379,7 @@ class UIComponents:
                 <span class="material-symbols-outlined">planner_review</span>
                 <span class="scroll-text">PMO &nbsp;&nbsp;&nbsp;</span>
                 <span class="material-symbols-outlined">qr_code </span>
-                <span class="scroll-text">Data Science Revolution ⚡️ &nbsp;&nbsp;&nbsp;</span>
+                <span class="scroll-text">Data Science &nbsp;&nbsp;&nbsp;</span>
                 <span class="material-symbols-outlined">palette </span>
                 <span class="scroll-text">Streamlit v1.45.1 &nbsp;&nbsp;&nbsp;</span>
                 <span class="material-symbols-outlined">code </span>
