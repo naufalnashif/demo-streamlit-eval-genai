@@ -2,6 +2,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import streamlit as st
+from datetime import datetime
 
 class ExcelAnalyzer:
     def __init__(self):
@@ -196,3 +197,143 @@ class ExcelAnalyzer:
         df_counts_total = pd.DataFrame(count_rows_total)
         df_metrics_total = pd.DataFrame(metric_rows_total)
         return df_counts, df_metrics, df_counts_total, df_metrics_total
+
+class UIComponents:
+    @staticmethod
+    def render_welcome():
+        st.markdown("""
+            <style>
+            .typewriter h2 {
+                overflow: hidden;
+                border-right: .15em solid red;
+                white-space: nowrap;
+                letter-spacing: .05em;
+                animation: typing 3s steps(42, end), blink-caret .75s step-end infinite;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-size: 1.5rem;
+                text-align: left;
+                margin: 0;
+            }
+
+            @keyframes typing {
+                from { width: 0 }
+                to { width: 42ch }
+            }
+
+            @keyframes blink-caret {
+                from, to { border-color: transparent }
+                50% { border-color: grey }
+            }
+            </style>
+
+            <div class="typewriter">
+                <h2>📊 Welcome to AI Model Evaluation Dashboard</h2>
+            </div>
+        """, unsafe_allow_html=True)
+
+    @staticmethod 
+    def render_doc():
+        st.subheader("📘 Documentation")
+        st.markdown("""
+        ### 🚀 Getting Started
+
+        Welcome to the AI Evaluation Dashboard! Here's how to use it:
+
+        1. **Upload** an Excel (.xlsx) file using the sidebar.
+        2. **Choose** the category column (e.g., verification result).
+        3. Head over to the **Statistics** tab to see counts and evaluation metrics (Accuracy, F1 Score, etc.).
+        4. Use the **Data Analysis** tab to explore visualizations and filter data by multiple verification types.
+        5. This **Documentation** tab is here to guide you whenever you need help.
+
+        ---
+
+        ### 🧠 App Architecture
+
+        - **Backend**: Data processing with `Pandas`.
+        - **Visualization**: Powered by `Matplotlib` and `Seaborn`.
+        - **User Interface**: Built with `Streamlit` and organized via tab navigation.
+
+        ---
+
+        ### 🙌 Credits & Acknowledgements
+
+        - Created by **Naufal Nashif**
+        - Built with: `Pandas`, `Streamlit`, `Matplotlib`, `Seaborn`
+        - Special thanks to the open-source community and official documentation for continuous inspiration ✨
+
+        ---
+
+        ### 🔗 Source Code & Docs
+
+        Full source code and technical documentation available on GitHub:
+
+        ```
+        https://github.com/naufalnashif/rfojk-sreamlit-ai-eval
+        ```
+
+        Feel free to ⭐ the repo, fork it, or contribute!
+
+        ---
+        """)
+    
+    @staticmethod
+    def render_footer():
+        year_now = datetime.now().year
+        st.markdown("""
+        <style>
+        .wrapper {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            height: 40px;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        .scrolling-container {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            animation: scroll-left 20s linear infinite;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #aaa;
+            filter: grayscale(100%);
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .logo {
+            height: 24px;
+            vertical-align: middle;
+            margin: 0 1rem;
+            opacity: 0.7;
+        }
+
+        .scroll-text {
+            font-size: 1.1rem;
+            display: inline;
+        }
+        </style>
+
+        <div class="wrapper">
+            <div class="scrolling-container">
+                <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/8/83/OJK_Logo.png" />
+                <span class="scroll-text">Otoritas Jasa Keuangan &nbsp;&nbsp;&nbsp;</span>
+                <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" />
+                <span class="scroll-text">Project Management Officer (PMO) &nbsp;&nbsp;&nbsp;</span>
+                <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" />
+                <span class="scroll-text">Data Science Revolution ⚡️</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.divider()
+        st.write("Thank you for trying the demo!") 
+        st.caption(f"Made with ❤️ by :blue[Naufal Nashif] ©️ {year_now}")

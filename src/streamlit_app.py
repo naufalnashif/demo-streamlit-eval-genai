@@ -1,14 +1,14 @@
 import streamlit as st
 from io import BytesIO
 import requests
-import utils.myFunc as mf 
+from utils.myFunc import ExcelAnalyzer, UIComponents
+
+uc = UIComponents()
+analyzer = ExcelAnalyzer()
 
 def main():
     st.set_page_config(layout="wide")
-    st.title("📊 AI Model Evaluation Dashboard")
-
-    analyzer = mf.ExcelAnalyzer()
-
+    uc.render_welcome()
     # ------------------------ SIDEBAR ----------------------------
     st.sidebar.image("src/assets/ojk-logo-jpg.jpg")
     with st.sidebar:
@@ -55,8 +55,10 @@ def main():
             autoplay=True,
             muted=True
         )
+        uc.render_footer()
         st.stop()
-
+        # st.title("📊 AI Model Evaluation Dashboard")
+    
     # ------------------- DATASET PROCESSING -------------------------
     sheets = analyzer.get_all_sheet_names(input_files)
     if not sheets:
@@ -201,49 +203,11 @@ def main():
                 st.dataframe(df, use_container_width=True)
 
     with tab3:
-        st.subheader("📘 Documentation")
-        st.markdown("""
-        ### 🚀 Getting Started
-
-        Welcome to the AI Evaluation Dashboard! Here's how to use it:
-
-        1. **Upload** an Excel (.xlsx) file using the sidebar.
-        2. **Choose** the category column (e.g., verification result).
-        3. Head over to the **Statistics** tab to see counts and evaluation metrics (Accuracy, F1 Score, etc.).
-        4. Use the **Data Analysis** tab to explore visualizations and filter data by multiple verification types.
-        5. This **Documentation** tab is here to guide you whenever you need help.
-
-        ---
-
-        ### 🧠 App Architecture
-
-        - **Backend**: Data processing with `Pandas`.
-        - **Visualization**: Powered by `Matplotlib` and `Seaborn`.
-        - **User Interface**: Built with `Streamlit` and organized via tab navigation.
-
-        ---
-
-        ### 🙌 Credits & Acknowledgements
-
-        - Created by **Naufal Nashif**
-        - Built with: `Pandas`, `Streamlit`, `Matplotlib`, `Seaborn`
-        - Special thanks to the open-source community and official documentation for continuous inspiration ✨
-
-        ---
-
-        ### 🔗 Source Code & Docs
-
-        Full source code and technical documentation available on GitHub:
-
-        ```
-        https://github.com/naufalnashif/rfojk-sreamlit-ai-eval
-        ```
-
-        Feel free to ⭐ the repo, fork it, or contribute!
-
-        ---
-        """)
-
+        uc.render_doc()
+    
+    uc.render_footer()
 
 if __name__ == "__main__":
     main()
+    
+    
