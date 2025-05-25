@@ -291,6 +291,21 @@ class UIComponents:
         year_now = datetime.now().year
         st.markdown(f"""
         <style>
+        @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+
+        .material-symbols-outlined {{
+            font-family: 'Material Symbols Outlined';
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24;
+            font-size: 24px;
+            vertical-align: middle;
+            margin: 0 1rem;
+            color: #aaa;
+        }}
+
         .wrapper {{
             width: 100%;
             overflow: hidden;
@@ -331,7 +346,6 @@ class UIComponents:
             display: inline;
         }}
 
-        /* Responsif untuk HP */
         @media only screen and (max-width: 600px) {{
             .wrapper {{
                 height: 50px;
@@ -346,8 +360,13 @@ class UIComponents:
                 font-size: 0.85rem;
             }}
 
+            .material-symbols-outlined {{
+                font-size: 20px;
+                margin: 0 0.5rem;
+            }}
+
             .scrolling-container {{
-                animation-duration: 30s; /* Lebih lambat di layar kecil */
+                animation-duration: 30s;
             }}
         }}
         </style>
@@ -356,14 +375,24 @@ class UIComponents:
             <div class="scrolling-container">
                 <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/8/83/OJK_Logo.png" />
                 <span class="scroll-text">Otoritas Jasa Keuangan &nbsp;&nbsp;&nbsp;</span>
-                <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" />
-                <span class="scroll-text">Project Management Officer (PMO) &nbsp;&nbsp;&nbsp;</span>
-                <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" />
-                <span class="scroll-text">Data Science Revolution ⚡️</span>
+                <span class="material-symbols-outlined">planner_review</span>
+                <span class="scroll-text">PMO &nbsp;&nbsp;&nbsp;</span>
+                <span class="material-symbols-outlined">qr_code </span>
+                <span class="scroll-text">Data Science Revolution ⚡️ &nbsp;&nbsp;&nbsp;</span>
+                <span class="material-symbols-outlined">palette </span>
+                <span class="scroll-text">Streamlit v1.45.1 &nbsp;&nbsp;&nbsp;</span>
+                <span class="material-symbols-outlined">code </span>
+                <span class="scroll-text">Powered by Python</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
         st.divider()
-        st.write("Thank you for trying the demo!") 
-        st.caption(f"Made with ❤️ by :blue[Naufal Nashif] ©️ {year_now}")
+
+        st.markdown(f"""
+        <div style="text-align: center;">
+            <p style="color: grey; font-size: 0.875rem;">
+                Made with ❤️ by <span style="color: #1f77b4;">Naufal Nashif</span> ©️ {year_now}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
