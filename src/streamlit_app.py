@@ -17,8 +17,8 @@ def main():
 
             # Pilih sumber data
             data_source = st.radio(
-                "Pilih sumber data:",
-                options=["Upload File", "Gunakan Demo Dummy Data"],
+                "Select data source:",
+                options=["Upload File", "Use Demo Dummy Data"],
                 index=0
             )
 
@@ -26,12 +26,14 @@ def main():
 
             if data_source == "Upload File":
                 uploaded_files = st.file_uploader(
-                    "Unggah berkas XLSX",
+                    "Upload XLSX files",
                     type=['xlsx'], accept_multiple_files=True
                 )
                 if uploaded_files:
                     input_files = uploaded_files
-                st.info("Silakan upload minimal satu file Excel (.xlsx).")
+                    st.success("Data loaded successfully.")
+                else: 
+                    st.info("Please upload at least one Excel (.xlsx) file.")
 
             else:  # Gunakan demo dummy dari huggingface
                 demo_url = "https://huggingface.co/datasets/naufalnashif/assets-rfojk/resolve/main/RFOJK20250524_df_joined_demo.xlsx"
@@ -40,9 +42,9 @@ def main():
                     demo_file = BytesIO(response.content)
                     demo_file.name = "RFOJK20250524_df_joined_demo.xlsx"
                     input_files = [demo_file]  # agar serupa dengan uploaded_files
-                    st.success("Demo data berhasil dimuat.")
+                    st.success("Demo Dummy Data loaded successfully.")
                 except Exception as e:
-                    st.error(f"Gagal memuat demo data: {e}")
+                    st.error(f"Failed to load demo data: {e}")
 
     # ---------------------- VIDEO SECTION ------------------------
     if not input_files:
@@ -55,10 +57,10 @@ def main():
         )
         st.stop()
 
-    # ------------------- PROSES DATASET -------------------------
+    # ------------------- DATASET PROCESSING -------------------------
     sheets = analyzer.get_all_sheet_names(input_files)
     if not sheets:
-        st.warning("Tidak ada sheet ditemukan di file yang diupload.")
+        st.warning("No sheets found in the uploaded file.")
         return
 
     default_sheet = "Sheet1"
@@ -66,7 +68,7 @@ def main():
 
     combined_df = analyzer.load_and_concat_sheets(input_files, sheet_choice)
     if combined_df is None or combined_df.empty:
-        st.warning("Data gabungan kosong atau gagal dibaca.")
+        st.warning("Combined data is empty or failed to load.")
         return
 
     analyzer.df = combined_df
@@ -74,11 +76,11 @@ def main():
     num_cols, cat_cols = analyzer.get_columns()
 
     if len(cat_cols) == 0:
-        st.warning("Data gabungan tidak memiliki kolom kategorikal untuk analisis.")
+        st.warning("The combined data has no categorical columns for analysis.")
         return
 
     if analyzer.verif_col not in analyzer.df.columns:
-        st.warning(f"Kolom '{analyzer.verif_col}' tidak ditemukan di data gabungan.")
+        st.warning(f"Column '{analyzer.verif_col}' not found in the combined data.")
         return
 
     verif_options = analyzer.df[analyzer.verif_col].dropna().unique().tolist()
@@ -88,10 +90,10 @@ def main():
     tab1, tab2, tab3 = st.tabs(["📈 AI Model Eval", "📊 Analytics", "📚 Doc"])
 
     with tab1:
-        st.header("Summary :")
+        st.header("Table Detail :")
         df_counts, df_metrics, df_counts_total, df_metrics_total = analyzer.calculate_confusion_stats()
         if df_counts is None or df_metrics is None:
-            st.warning("Data tidak mencukupi untuk menghitung statistik (pastikan kolom berisi 'True Positive', 'True Negative', 'False Positive', 'False Negative').")
+            st.warning("Insufficient data to compute statistics (make sure the column contains 'True Positive', 'True Negative', 'False Positive', 'False Negative').")
         else:
             with st.expander ("Coef Matrix:"):
                 # st.subheader("Coef Matrix Per Key")
@@ -143,13 +145,13 @@ def main():
 
                 # Multiselect dengan default 'All'
                 selected_key_raw = st.multiselect(
-                    "Pilih Key:",
+                    "Select Key:",
                     options=key_options_with_all,
                     default=['All']
                 )
 
                 selected_type_raw = st.selectbox(
-                    "Pilih Type:",
+                    "Select Type:",
                     options=type_options_with_all,
                     index=type_options_with_all.index('All') if 'All' in type_options_with_all else 0
                 )
@@ -158,7 +160,7 @@ def main():
                 allowed_cat_cols = ['Key', 'Type', 'Bab', 'Emiten']
                 cat_cols_filtered = [col for col in cat_cols if col in allowed_cat_cols]
 
-                analyzer.category_col = st.selectbox("Pilih Kolom Kategori Y-Bar", cat_cols_filtered)
+                analyzer.category_col = st.selectbox("Select Y-Bar", cat_cols_filtered)
 
                 # Logika: jika 'All' dipilih, maka ambil semua opsi asli
                 analyzer.selected_key = key_options if 'All' in selected_key_raw else selected_key_raw
@@ -171,12 +173,12 @@ def main():
                     default=verif_options[:1]
                 )
 
-                analyzer.top_n = st.slider("Tentukan Top N: ", min_value=1, max_value=100, value=10)
+                analyzer.top_n = st.slider("Top N: ", min_value=1, max_value=100, value=10)
 
                 grouped, grouped_detail, grouped_with_criteria = analyzer.filter_and_group()
                 
         if grouped.empty:
-            st.info("Data tidak ditemukan untuk filter yang dipilih.")
+            st.info("No data found for the selected filter.")
         else:
             analyzer.plot_bar(grouped)
             with st.expander(f"### 📋 Tabel Detail {analyzer.category_col}:"):
