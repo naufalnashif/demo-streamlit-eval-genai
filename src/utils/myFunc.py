@@ -331,7 +331,7 @@ class UIComponents:
                 transform: translateX(100%);
             }}
             100% {{
-                transform: translateX(-100%);
+                transform: translateX(-150%);
             }}
         }}
 
@@ -367,7 +367,7 @@ class UIComponents:
             }}
 
             .scrolling-container {{
-                animation-duration: 35s;
+                animation-duration: 20s;
             }}
         }}
         </style>
