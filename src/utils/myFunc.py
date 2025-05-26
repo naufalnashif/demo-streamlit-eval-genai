@@ -331,7 +331,7 @@ class UIComponents:
                 transform: translateX(100%);
             }}
             100% {{
-                transform: translateX(-150%);
+                transform: translateX(-120%);
             }}
         }}
 
