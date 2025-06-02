@@ -27,7 +27,7 @@ jobs:
 
       - name: Add Hugging Face remote and push
         env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_DEMO: ${{ secrets.HF_DEMO }}
         run: |
-          git remote add hf https://naufalnashif:$HF_TOKEN@huggingface.co/spaces/naufalnashif/rfojk-streamlit-ai-eval
+          git remote add hf https://naufalnashif:$HF_DEMO@huggingface.co/spaces/naufalnashif/demo-streamlit-eval-genai
           git push --force hf master:main
