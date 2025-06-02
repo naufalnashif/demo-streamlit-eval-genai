@@ -374,10 +374,10 @@ class UIComponents:
 
         <div class="wrapper">
             <div class="scrolling-container">
-                <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/8/83/OJK_Logo.png" />
-                <span class="scroll-text">Otoritas Jasa Keuangan &nbsp;&nbsp;&nbsp;</span>
+                <span class="material-symbols-outlined">mindfulness</span>
+                <span class="scroll-text">Self Daily &nbsp;&nbsp;&nbsp;</span>
                 <span class="material-symbols-outlined">planner_review</span>
-                <span class="scroll-text">PMO &nbsp;&nbsp;&nbsp;</span>
+                <span class="scroll-text">Interval &nbsp;&nbsp;&nbsp;</span>
                 <span class="material-symbols-outlined">qr_code </span>
                 <span class="scroll-text">Data Science &nbsp;&nbsp;&nbsp;</span>
                 <span class="material-symbols-outlined">palette </span>

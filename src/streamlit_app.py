@@ -10,7 +10,7 @@ def main():
     st.set_page_config(layout="wide")
     uc.render_welcome()
     # ------------------------ SIDEBAR ----------------------------
-    st.sidebar.image("src/assets/ojk-logo-jpg.jpg")
+    st.sidebar.image("src/assets/self-daily-persona.jpeg")
     with st.sidebar:
         st.subheader('Settings :')
         with st.expander("General Settings :"):
@@ -49,7 +49,7 @@ def main():
     # ---------------------- VIDEO SECTION ------------------------
     if not input_files:
         st.video(
-            "https://huggingface.co/datasets/naufalnashif/assets-rfojk/resolve/main/video-streamlit-demo-compress.mp4",
+            "https://huggingface.co/datasets/naufalnashif/assets-rfojk/resolve/main/demo-streamlit-eval-genai-conpress.mp4",
             format="video/mp4",
             loop=True,
             autoplay=True,

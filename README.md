@@ -1,5 +1,5 @@
 ---
-title: RF OJK Streamlit AI Eval
+title: (demo) Streamlit AI Eval
 emoji: 🚀
 colorFrom: red
 colorTo: red
@@ -47,7 +47,7 @@ A simple yet powerful Streamlit web app for analyzing and evaluating verificatio
 
 To get the github repo :
 ```
-https://github.com/naufalnashif/rfojk-sreamlit-ai-eval
+https://github.com/naufalnashif/demo-streamlit-eval-genai
 ```
 
 To run this app locally:
@@ -59,6 +59,6 @@ streamlit run app.py
 
 To using the demo :
 ``` huggingface
-https://huggingface.co/spaces/naufalnashif/rfojk-streamlit-ai-eval/
+https://huggingface.co/spaces/naufalnashif/demo-streamlit-eval-genai/
 ```
 
